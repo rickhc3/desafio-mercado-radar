@@ -270,9 +270,6 @@ import Vue from "vue";
 import { Product } from "@/models/Product";
 
 export default Vue.extend({
-  components: {
-    Product
-  },
   computed: {
     $products() {
       return this.$store.getters.$product;

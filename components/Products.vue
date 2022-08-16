@@ -9,18 +9,17 @@
       >
         <b-card-group>
           <b-card :title="product.title" :img-src="product.image" img-top>
+
             <template #footer>
-              <small class="text-muted"
-                >Last updated {{ generateRandomMinutes() }} mins ago</small
-              >
-            </template>
-            <div class="d-flex justify-content-center">
-              <b-button class="mx-2" :href="`/product/${product.id}`" variant="primary"
+              
+            <div class="text-center">
+              <b-button :href="`/product/${product.id}`"  block variant="primary"
               >Ver Produto</b-button>
 
-              <b-button :href="`/product/${product.id}`" variant="danger"
+              <b-button :href="`/product/${product.id}`" block variant="danger"
               >Adicionar ao Carrinho</b-button>
             </div>
+            </template>
           </b-card>
         </b-card-group>
       </div>
@@ -42,9 +41,6 @@ export default {
   },
   created() {
     this.$store.dispatch("fetchProducts");
-    this.$allProducts.forEach((product: Product) => {
-      product.description = product.description.substring(0, 255) + " ver mais...";
-    });
   },
   methods: {
     generateRandomMinutes() {
@@ -53,6 +49,12 @@ export default {
 
     tax5percent(price: number) {
       return price * 1.05;
+    },
+    formatMoney(value: number) {
+      return new Intl.NumberFormat("pt-BR", {
+        style: "currency",
+        currency: "BRL",
+      }).format(value);
     },
   },
 };

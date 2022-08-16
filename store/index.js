@@ -1,6 +1,7 @@
 export const state = () => ({
   products: [],
-  product: {}
+  product: {},
+  productRating: {}
 })
 
 export const mutations = {
@@ -9,6 +10,9 @@ export const mutations = {
   },
   SET_PRODUCT(state, product) {
     state.product = product
+  },
+  SET_PRODUCTRATING(state, productRating){
+    state.productRating = productRating
   }
 }
 
@@ -24,6 +28,7 @@ export const actions = {
     return this.$axios.$get(`https://fakestoreapi.com/products/${id}`)
       .then(response => {
         context.commit('SET_PRODUCT', response)
+        context.commit('SET_PRODUCTRATING', response.rating)
       })
   }
 
@@ -35,5 +40,8 @@ export const getters = {
   },
   $product(state) {
     return state.product
+  },
+  $rating(state) {
+    return state.productRating
   }
 }

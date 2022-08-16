@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "strictPropertyInitialization": false,
     "target": "ES2018",
     "module": "ESNext",
     "moduleResolution": "Node",
@@ -30,8 +31,6 @@
     ]
   },
   "exclude": [
-    "node_modules",
-    ".nuxt",
-    "dist"
+    "node_modules"
   ]
 }

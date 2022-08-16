@@ -17,14 +17,8 @@
           </b-nav-form>
 
           <b-button variant="dark" v-b-toggle.sidebar-right>
-            <b-icon
-              stacked
-              icon="camera"
-              variant="info"
-              scale="0.75"
-              shift-v="-0.25"
-            ></b-icon>
             Carrinho
+            <b-icon icon="cart-check-fill" aria-hidden="true"></b-icon>
             <span rounded dark>0</span>
           </b-button>
         </b-navbar-nav>

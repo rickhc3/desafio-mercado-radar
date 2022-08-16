@@ -16,7 +16,7 @@
               <b-button :href="`/product/${product.id}`"  block variant="primary"
               >Ver Produto</b-button>
 
-              <b-button :href="`/product/${product.id}`" block variant="danger"
+              <b-button @click="addToCart(product)" block variant="danger"
               >Adicionar ao Carrinho</b-button>
             </div>
             </template>
@@ -55,6 +55,15 @@ export default {
         style: "currency",
         currency: "BRL",
       }).format(value);
+    },
+    addToCart(product: Product) {
+      this.$store.dispatch("addToCart", product);
+      this.$bvToast.toast(`${product.title} adicionado ao carrinho`, {
+        title: "Produto Adicionado",
+        autoHideDelay: 2000,
+        appendToast: true,
+        variant: "success",
+      });
     },
   },
 };

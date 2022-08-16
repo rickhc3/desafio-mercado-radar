@@ -1,5 +1,5 @@
 <template>
-  <b-navbar toggleable="lg" type="dark" variant="primary">
+  <b-navbar toggleable="lg" type="dark" variant="primary" fixed="top">
     <b-container>
       <b-navbar-brand href="/">Desafio - Mercado Radar</b-navbar-brand>
 
@@ -19,7 +19,7 @@
           <b-button variant="dark" v-b-toggle.sidebar-right>
             Carrinho
             <b-icon icon="cart-check-fill" aria-hidden="true"></b-icon>
-            <span rounded dark>0</span>
+            <span rounded dark>{{ $store.getters.$cart.length }}</span>
           </b-button>
         </b-navbar-nav>
       </b-collapse>

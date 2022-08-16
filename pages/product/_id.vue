@@ -1,8 +1,7 @@
 <template>
   <div>
     <Navbar />
-    <Sidebar />
-    <main>
+    <main class="mt-5">
       <div class="container mt-3">
         <!-- Gallery + details-->
         <div class="bg-light shadow-lg rounded-3 px-4 py-3 mb-5">
@@ -37,8 +36,9 @@
                         ms-1
                       "
                     >
-                      {{ $store.getters.$rating.count }} Reviews / Nota Média: {{ $store.getters.$rating.rate }} </span
-                    ></a
+                      {{ $store.getters.$rating.count }} Reviews / Nota Média:
+                      {{ $store.getters.$rating.rate }}
+                    </span></a
                   >
                   <b-button class="btn-wishlist me-0 me-lg-n3" type="button">
                     <b-icon icon="heart"></b-icon>
@@ -54,13 +54,20 @@
                   <p class="fs-sm text-muted pb-2">
                     {{ $store.getters.$product.description }}
                   </p>
+                  <b-button
+                    @click="addToCart($store.getters.$product)"
+                    variant="primary"
+                    block
+                  >
+                    Adicionar ao Carrinho
+                  </b-button>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <hr>
+      <hr />
       <div class="container py-5 my-md-3">
         <h2 class="h3 text-center pb-4">Você também pode gostar de...</h2>
       </div>
@@ -79,9 +86,12 @@ export default Vue.extend({
     },
   },
   created() {
+    this.$store.dispatch("fetchProducts");
     this.$store.dispatch("fetchProduct", this.$route.params.id);
   },
-  mounted() {},
+  mounted() {
+    console.log('dsadasdsasda', this.$store.getters.$alsoLike);
+  },
   methods: {
     generateRandomMinutes() {
       return Math.floor(Math.random() * 60);
@@ -94,6 +104,17 @@ export default Vue.extend({
     },
     fetchRandomProduct() {
       this.$store.dispatch("fetchProduct", Math.floor(Math.random() * 10));
+    },
+    addToCart(product: Product) {
+      this.$store.dispatch("addToCart", product);
+      this.$bvToast.toast(`${product.title} adicionado ao carrinho`, {
+        title: "Produto Adicionado",
+        autoHideDelay: 2000,
+        appendToast: true,
+        variant: "success",
+        toaster: "b-toaster-top-center",
+      });
+      localStorage.setItem("cart", JSON.stringify(this.$store.getters.$cart));
     },
   },
 });

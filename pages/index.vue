@@ -12,7 +12,7 @@
 export default ({
   mounted() {
     if (localStorage.getItem("cart")) {
-      this.$store.commit("SET_CART", JSON.parse(localStorage.getItem("cart")));
+      this.$store.commit("SET_PRODUCTS_CART", JSON.parse(localStorage.getItem("cart")));
     }
   },
 });

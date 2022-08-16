@@ -21,7 +21,7 @@
                     <td>
                       <button
                         class="btn btn-danger"
-                        @click="removeProduct(product)"
+                        @click="removeProduct(i)"
                         v-b-tooltip.hover
                         title="Remover do Favoritos"
                       >
@@ -47,17 +47,34 @@ export default {
       return this.$store.getters.$wishlist;
     },
   },
+  mounted() {
+    if (localStorage.getItem("cart")) {
+      this.$store.commit("SET_PRODUCTS_CART", JSON.parse(localStorage.getItem("cart")));
+    }
+
+    if (localStorage.getItem("wishlist")) {
+      this.$store.commit(
+        "SET_PRODUCTS_WISHLIST",
+        JSON.parse(localStorage.getItem("wishlist"))
+      );
+    }
+  },
   methods: {
     removeProduct(product: Product) {
-      this.ModalConfirm("Tem certeza?", "Esta ação não pode ser desfeita!").then(
-      async (r) => {
+      this.ModalConfirm(
+        "Tem certeza?",
+        "Esta ação não pode ser desfeita!"
+      ).then(async (r) => {
         if (r) {
-      this.$store.dispatch("removeFromWishlist", product);
-          await this.ModalInfo("Info!", 'response.message');
+          this.$store.dispatch("removeFromWishlist", product);
+          localStorage.setItem(
+            "wishlist",
+            JSON.stringify(this.$store.getters.$wishlist)
+          );
+          await this.ModalInfo("Info!", "response.message");
           this.$bvModal.show("modal-1");
         }
-      }
-    );
+      });
     },
     formatMoney(value: number) {
       return new Intl.NumberFormat("pt-BR", {

@@ -5,6 +5,7 @@ export const state = () => ({
   cart: [],
   cartTotal: 0,
   wishlist: [],
+  alsoLike: [],
 })
 
 export const mutations = {
@@ -14,26 +15,29 @@ export const mutations = {
   SET_PRODUCT(state, product) {
     state.product = product
   },
-  SET_PRODUCTRATING(state, productRating) {
+  SET_PRODUCT_RATING(state, productRating) {
     state.productRating = productRating
   },
-  ADD_CART(state, cart) {
+  ADD_PRODUCT_TO_CART(state, cart) {
     state.cart.push(cart)
   },
-  SET_CART(state, cart) {
+  SET_PRODUCTS_CART(state, cart) {
     state.cart = cart
   },
   REMOVE_PRODUCT_CART(state, product) {
     state.cart.splice(product, 1)
   },
-  ADD_WISHLIST(state, wishlist) {
+  ADD_PRODUCT_WISHLIST(state, wishlist) {
     state.wishlist.push(wishlist)
   },
   REMOVE_PRODUCT_WISHLIST(state, product) {
     state.wishlist.splice(product, 1)
   },
-  SET_WISHLIST(state, wishlist) {
+  SET_PRODUCTS_WISHLIST(state, wishlist) {
     state.wishlist = wishlist
+  },
+  SET_PRODUCTS_ALSO_LIKE(state, alsoLike) {
+    state.alsoLike = alsoLike
   }
 }
 
@@ -49,12 +53,12 @@ export const actions = {
     return this.$axios.$get(`https://fakestoreapi.com/products/${id}`)
       .then(response => {
         context.commit('SET_PRODUCT', response)
-        context.commit('SET_PRODUCTRATING', response.rating)
+        context.commit('SET_PRODUCT_RATING', response.rating)
       })
   },
 
   addToCart(context, product) {
-    context.commit('ADD_CART', product)
+    context.commit('ADD_PRODUCT_TO_CART', product)
   },
 
   removeFromCart(context, product) {
@@ -62,16 +66,16 @@ export const actions = {
   },
 
   emptyCart(context) {
-    context.commit('SET_CART', [])
+    context.commit('SET_PRODUCTS_CART', [])
   },
 
   setCart(context, cart) {
-    context.commit('SET_CART', cart)
+    context.commit('SET_PRODUCTS_CART', cart)
   },
 
   addToWishlist(context, product) {
     if (!context.state.wishlist.includes(product)) {
-      context.commit('ADD_WISHLIST', product)
+      context.commit('ADD_PRODUCT_WISHLIST', product)
     } else {
       context.commit('REMOVE_PRODUCT_WISHLIST', product)
     }
@@ -81,7 +85,11 @@ export const actions = {
     context.commit('REMOVE_PRODUCT_WISHLIST', product)
   },
   setWishlist(context, wishlist) {
-    context.commit('SET_WISHLIST', wishlist)
+    context.commit('SET_PRODUCTS_WISHLIST', wishlist)
+  },
+
+  setAlsoLike(context, alsoLike) {
+    context.commit('SET_PRODUCTS_ALSO_LIKE', alsoLike)
   }
 
 }
@@ -106,6 +114,9 @@ export const getters = {
   },
   $wishlist(state) {
     return state.wishlist
+  },
+  $alsoLike(state) {
+    return state.alsoLike
   }
 
 }

@@ -1,6 +1,10 @@
 <template>
   <b-container class="my-4">
-   
+    <b-form-input
+      size="sm"
+      class="mr-sm-2"
+      placeholder="Pesquisar produtos"
+    ></b-form-input>
     <div class="row" v-for="i in Math.ceil($allProducts.length / 4)" :key="i">
       <div
         class="col-xs-12 col-sm-6 col-md-6 col-lg-3 col-xl-3 mt-3"
@@ -8,9 +12,19 @@
         :key="product.id"
       >
         <b-card-group>
-          <b-card :img-src="product.image" img-top>
-            <b-icon icon="circle-fill" animation="throb" font-scale="4" v-if="!product.image"></b-icon>
-            <b-button @click="addFavorite(product)"> Add Favorites </b-button>
+          <b-card img-top>
+            <div class="d-flex justify-content-end">
+              <b-button @click="addFavorite(product)" size="sm"
+                ><b-icon icon="heart"></b-icon>
+              </b-button>
+            </div>
+            <b-card-img :src="product.image"></b-card-img>
+            <b-icon
+              icon="circle-fill"
+              animation="throb"
+              font-scale="4"
+              v-if="!product.image"
+            ></b-icon>
 
             <h6>{{ product.title }}</h6>
             Valor: {{ formatMoney(product.price) }}
@@ -71,18 +85,23 @@ export default {
         autoHideDelay: 2000,
         appendToast: true,
         variant: "success",
+        toaster: "b-toaster-top-center",
       });
       localStorage.setItem("cart", JSON.stringify(this.$store.getters.$cart));
     },
-    addFavorite (product: Product) {
+    addFavorite(product: Product) {
       this.$store.dispatch("addToWishlist", product);
       this.$bvToast.toast(`${product.title} adicionado aos favoritos`, {
-        title: "Produto Adicionado",
+        title: "Produto Adicionado aos Favoritos",
         autoHideDelay: 2000,
         appendToast: true,
         variant: "success",
+        toaster: "b-toaster-top-center",
       });
-      localStorage.setItem("wishlist", JSON.stringify(this.$store.getters.$wishlist));
+      localStorage.setItem(
+        "wishlist",
+        JSON.stringify(this.$store.getters.$wishlist)
+      );
     },
   },
 };
@@ -92,5 +111,9 @@ export default {
 .card-img,
 .card-img-top {
   padding: 10px;
+}
+
+.card-header {
+  background-color: #fff;
 }
 </style>

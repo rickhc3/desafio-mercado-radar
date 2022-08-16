@@ -4,6 +4,7 @@ export const state = () => ({
   productRating: {},
   cart: [],
   cartTotal: 0,
+  wishlist: [],
 })
 
 export const mutations = {
@@ -22,8 +23,17 @@ export const mutations = {
   SET_CART(state, cart) {
     state.cart = cart
   },
-  REMOVE_PRODUCT(state, product) {
+  REMOVE_PRODUCT_CART(state, product) {
     state.cart.splice(product, 1)
+  },
+  ADD_WISHLIST(state, wishlist) {
+    state.wishlist.push(wishlist)
+  },
+  REMOVE_PRODUCT_WISHLIST(state, product) {
+    state.wishlist.splice(product, 1)
+  },
+  SET_WISHLIST(state, wishlist) {
+    state.wishlist = wishlist
   }
 }
 
@@ -48,7 +58,7 @@ export const actions = {
   },
 
   removeFromCart(context, product) {
-    context.commit('REMOVE_PRODUCT', product)
+    context.commit('REMOVE_PRODUCT_CART', product)
   },
 
   emptyCart(context) {
@@ -57,6 +67,21 @@ export const actions = {
 
   setCart(context, cart) {
     context.commit('SET_CART', cart)
+  },
+
+  addToWishlist(context, product) {
+    if (!context.state.wishlist.includes(product)) {
+      context.commit('ADD_WISHLIST', product)
+    } else {
+      context.commit('REMOVE_PRODUCT_WISHLIST', product)
+    }
+  },
+
+  removeFromWishlist(context, product) {
+    context.commit('REMOVE_PRODUCT_WISHLIST', product)
+  },
+  setWishlist(context, wishlist) {
+    context.commit('SET_WISHLIST', wishlist)
   }
 
 }
@@ -79,5 +104,8 @@ export const getters = {
       return total + product.price
     }, 0)
   },
-  
+  $wishlist(state) {
+    return state.wishlist
   }
+
+}

@@ -69,9 +69,6 @@ export default {
       return this.$store.getters.$cart;
     },
   },
-  mounted() {
-    this.$store.commit("setCart", []);
-  },
   created() {
     this.$store.dispatch("fetchProducts");
   },

@@ -10,6 +10,8 @@
         <b-card-group>
           <b-card :img-src="product.image" img-top>
             <b-icon icon="circle-fill" animation="throb" font-scale="4" v-if="!product.image"></b-icon>
+            <b-button @click="addFavorite(product)"> Add Favorites </b-button>
+
             <h6>{{ product.title }}</h6>
             Valor: {{ formatMoney(product.price) }}
             <template #footer>
@@ -71,6 +73,16 @@ export default {
         variant: "success",
       });
       localStorage.setItem("cart", JSON.stringify(this.$store.getters.$cart));
+    },
+    addFavorite (product: Product) {
+      this.$store.dispatch("addToWishlist", product);
+      this.$bvToast.toast(`${product.title} adicionado aos favoritos`, {
+        title: "Produto Adicionado",
+        autoHideDelay: 2000,
+        appendToast: true,
+        variant: "success",
+      });
+      localStorage.setItem("wishlist", JSON.stringify(this.$store.getters.$wishlist));
     },
   },
 };

@@ -14,7 +14,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="product in $cart">
+              <tr v-for="(product, i) in $cart" :key="i">
                 <td>
                   <span>
                     {{ product.title }}

@@ -4,6 +4,8 @@
       <div class="text-center text-white">
         <h1 class="display-4 fw-bolder">Mercado Radar</h1>
         <p class="lead fw-normal text-white-50 mb-0">
+          &lt;Header /&gt;<br>
+          Área para banners<br>
           Desafio Frontend
         </p>
       </div>

@@ -2,7 +2,8 @@
   <div>
     <b-sidebar id="sidebar-cart" title="Carrinho" right shadow backdrop>
       <div class="p-2 my-2">
-        <div class="list-group">
+        <div class="list-group" v-if="$store.getters.$cart.length > 0"
+>
           <div
             class="
               list-group-item
@@ -34,7 +35,11 @@
             </div>
           </div>
         </div>
-        <hr>
+        <div class="text-center" v-else>
+          <h5>Nenhum produto no carrinho</h5>
+        </div>
+        <div v-if="$store.getters.$cart.length > 0">
+          <hr>
         <div class="text-left">
           <span>
             <b>Total do Carrinho</b>:
@@ -57,6 +62,7 @@
           <b-button :href="`/cart`" variant="primary" class="ml-2">
             Ver Carrinho
           </b-button>
+        </div>
         </div>
       </div>
     </b-sidebar>

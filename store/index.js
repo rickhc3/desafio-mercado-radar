@@ -90,8 +90,7 @@ export const actions = {
 
   setAlsoLike(context, alsoLike) {
     context.commit('SET_PRODUCTS_ALSO_LIKE', alsoLike)
-  }
-
+  },
 }
 
 export const getters = {
@@ -117,6 +116,7 @@ export const getters = {
   },
   $alsoLike(state) {
     return state.alsoLike
-  }
+  },
+  
 
 }

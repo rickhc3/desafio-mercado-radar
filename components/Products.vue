@@ -4,47 +4,47 @@
       size="sm"
       class="mr-sm-2"
       placeholder="Pesquisar produtos"
+      @keydown="searchProducts($event.target.value)"
     ></b-form-input>
     <div class="row" v-for="i in Math.ceil($allProducts.length / 4)" :key="i">
-      <div
-        class="col-xs-12 col-sm-6 col-md-6 col-lg-3 col-xl-3 mt-3"
-        v-for="product in $allProducts.slice((i - 1) * 4, i * 4)"
-        :key="product.id"
-      >
-        <b-card-group>
-          <b-card img-top>
-            <div class="d-flex justify-content-end">
-              <b-button @click="addFavorite(product)" size="sm"
-                ><b-icon icon="heart"></b-icon>
-              </b-button>
-            </div>
-            <b-card-img :src="product.image"></b-card-img>
-            <b-icon
-              icon="circle-fill"
-              animation="throb"
-              font-scale="4"
-              v-if="!product.image"
-            ></b-icon>
+      <b-card-group deck class="my-2">
+        <b-card
+          v-for="(product, i) in $allProducts.slice((i - 1) * 4, i * 4)"
+          :key="i"
+          :title="product.title"
+        >
+          <div class="d-flex justify-content-end"></div>
+          
+          <div
+            class="my-auto"
+          >
+            <a :href="`/product/${product.id}`">
+              <b-card-img :src="product.image"></b-card-img>
+            </a>
+          </div>
+          <b-icon
+            icon="circle-fill"
+            animation="throb"
+            font-scale="4"
+            v-if="!product.image"
+          ></b-icon>
 
-            <h6>{{ product.title }}</h6>
-            Valor: {{ formatMoney(product.price) }}
-            <template #footer>
-              <div class="text-center">
-                <b-button
-                  :href="`/product/${product.id}`"
-                  block
-                  variant="primary"
-                  >Ver Produto</b-button
-                >
-
-                <b-button @click="addToCart(product)" block variant="danger"
+          <template #footer>
+            <p class="h3 text-center">{{ formatMoney(product.price) }}</p>
+            <div class="text-center">
+              <b-button-group size="sm">
+                <b-button @click="addToCart(product)" block variant="success "
                   >Adicionar ao Carrinho</b-button
                 >
-              </div>
-            </template>
-          </b-card>
-        </b-card-group>
-      </div>
+                <b-button @click="addFavorite(product)" size="sm" variant="danger" v-b-tooltip.hover title="Marcar como favorito">
+                  <b-icon icon="heart-fill" v-if="checkFavorite(product)" ></b-icon>
+                  <b-icon icon="heart" v-else></b-icon>
+                </b-button>
+              </b-button-group>
+            </div>
+          </template>
+        </b-card>
+      </b-card-group>
     </div>
   </b-container>
 </template>
@@ -57,27 +57,22 @@ export default {
     $allProducts(): Product[] {
       return this.$store.getters.$allProducts;
     },
-    $newAllProducts(): Product[] {
-      return this.$store.getters.$allProducts;
-    },
   },
   created() {
     this.$store.dispatch("fetchProducts");
   },
   methods: {
-    generateRandomMinutes() {
-      return Math.floor(Math.random() * 60);
-    },
-
     tax5percent(price: number) {
       return price * 1.05;
     },
+
     formatMoney(value: number) {
       return new Intl.NumberFormat("pt-BR", {
         style: "currency",
         currency: "BRL",
       }).format(value);
     },
+
     addToCart(product: Product) {
       this.$store.dispatch("addToCart", product);
       this.$bvToast.toast(`${product.title} adicionado ao carrinho`, {
@@ -89,6 +84,7 @@ export default {
       });
       localStorage.setItem("cart", JSON.stringify(this.$store.getters.$cart));
     },
+
     addFavorite(product: Product) {
       this.$store.dispatch("addToWishlist", product);
       this.$bvToast.toast(`${product.title} adicionado aos favoritos`, {
@@ -103,6 +99,16 @@ export default {
         JSON.stringify(this.$store.getters.$wishlist)
       );
     },
+
+    checkFavorite(product: Product) {
+      return this.$store.getters.$wishlist.includes(product);
+    },
+
+    searchProducts(search: string) {
+      this.$allProducts
+        .filter((el) => el.title === search)
+        .map((el) => el.title);
+    },
   },
 };
 </script>
@@ -116,4 +122,6 @@ export default {
 .card-header {
   background-color: #fff;
 }
+
+
 </style>

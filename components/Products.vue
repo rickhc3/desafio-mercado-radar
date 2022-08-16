@@ -1,6 +1,6 @@
 <template>
   <b-container class="my-4">
-    <Sidebar />
+   
     <div class="row" v-for="i in Math.ceil($allProducts.length / 4)" :key="i">
       <div
         class="col-xs-12 col-sm-6 col-md-6 col-lg-3 col-xl-3 mt-3"
@@ -8,17 +8,23 @@
         :key="product.id"
       >
         <b-card-group>
-          <b-card :title="product.title" :img-src="product.image" img-top>
-
+          <b-card :img-src="product.image" img-top>
+            <b-icon icon="circle-fill" animation="throb" font-scale="4" v-if="!product.image"></b-icon>
+            <h6>{{ product.title }}</h6>
+            Valor: {{ formatMoney(product.price) }}
             <template #footer>
-              
-            <div class="text-center">
-              <b-button :href="`/product/${product.id}`"  block variant="primary"
-              >Ver Produto</b-button>
+              <div class="text-center">
+                <b-button
+                  :href="`/product/${product.id}`"
+                  block
+                  variant="primary"
+                  >Ver Produto</b-button
+                >
 
-              <b-button @click="addToCart(product)" block variant="danger"
-              >Adicionar ao Carrinho</b-button>
-            </div>
+                <b-button @click="addToCart(product)" block variant="danger"
+                  >Adicionar ao Carrinho</b-button
+                >
+              </div>
             </template>
           </b-card>
         </b-card-group>
@@ -28,7 +34,7 @@
 </template>
 
 <script lang="ts">
-import {Product} from '@/models/Product';
+import { Product } from "@/models/Product";
 
 export default {
   computed: {
@@ -64,6 +70,7 @@ export default {
         appendToast: true,
         variant: "success",
       });
+      localStorage.setItem("cart", JSON.stringify(this.$store.getters.$cart));
     },
   },
 };

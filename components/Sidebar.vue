@@ -1,8 +1,7 @@
 <template>
   <div>
-    <b-sidebar id="sidebar-right" title="Sidebar" right shadow backdrop>
+    <b-sidebar id="sidebar-right" title="Carrinho" right shadow backdrop>
       <div class="px-3 py-2">
-        <h4>Carrinho</h4>
         <div class="list-group">
           <div
             class="
@@ -37,7 +36,7 @@
           </b-button>
 
           <b-button
-            :href="`/cart/${$store.getters.$cart.length}`"
+            :href="`/cart`"
             variant="primary"
             class="ml-2"
           >
@@ -50,7 +49,11 @@
             {{ formatMoney($store.getters.$cartTotal) }}
           </span>
           <span>
-            Taxa: {{ formatMoney(tax5Percent($store.getters.$cartTotal)) }}
+            Imposto: {{ formatMoney(tax5Percent($store.getters.$cartTotal)) }}
+          </span>
+          <span>
+            Total com Imposto:
+            {{ formatMoney(totalWithTax($store.getters.$cartTotal)) }}
           </span>
         </div>
       </div>
@@ -66,6 +69,9 @@ export default {
       return this.$store.getters.$cart;
     },
   },
+  mounted() {
+    this.$store.commit("setCart", []);
+  },
   created() {
     this.$store.dispatch("fetchProducts");
   },
@@ -75,7 +81,11 @@ export default {
     },
 
     tax5Percent(price: number) {
-      return (price / 100) * 0.5;
+      return (price / 100) * 5;
+    },
+
+    totalWithTax(price: number) {
+      return price + this.tax5Percent(price);
     },
 
     formatMoney(value: number) {
@@ -84,13 +94,15 @@ export default {
         currency: "BRL",
       }).format(value);
     },
-    addToCart(product: Product) {
-      this.$store.dispatch("addToCart", product);
-      console.log(product);
-      console.log(this.$store.getters.$cart);
-    },
     removeFromCart(product: Product) {
       this.$store.dispatch("removeFromCart", product);
+      this.$bvToast.toast(`${product.title} removido do carrinho`, {
+        title: "Produto Removido",
+        autoHideDelay: 2000,
+        appendToast: true,
+        variant: "success",
+      });
+      localStorage.setItem("cart", JSON.stringify(this.$store.getters.$cart));
     },
   },
 };

@@ -11,8 +11,9 @@
   </header>
 </template>
 
-<script>
-export default {};
+<script lang="ts">
+export default {
+};
 </script>
 
 <style>

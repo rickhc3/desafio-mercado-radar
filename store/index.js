@@ -53,6 +53,10 @@ export const actions = {
 
   emptyCart(context) {
     context.commit('SET_CART', [])
+  },
+
+  setCart(context, cart) {
+    context.commit('SET_CART', cart)
   }
 
 }
@@ -74,5 +78,6 @@ export const getters = {
     return state.cart.reduce((total, product) => {
       return total + product.price
     }, 0)
+  },
+  
   }
-}

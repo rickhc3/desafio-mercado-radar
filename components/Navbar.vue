@@ -24,10 +24,11 @@
         </b-navbar-nav>
       </b-collapse>
     </b-container>
+    <Sidebar />
   </b-navbar>
 </template>
 
-<script>
+<script lang="ts">
 export default {};
 </script>
 

@@ -82,14 +82,14 @@ export default {
     if (localStorage.getItem("cart")) {
       this.$store.commit(
         "SET_PRODUCTS_CART",
-        JSON.parse(localStorage.getItem("cart"))
+        JSON.parse(localStorage.getItem("cart") as string)
       );
     }
 
     if (localStorage.getItem("wishlist")) {
       this.$store.commit(
         "SET_PRODUCTS_WISHLIST",
-        JSON.parse(localStorage.getItem("wishlist"))
+        JSON.parse(localStorage.getItem("wishlist") as string)
       );
     }
   },

@@ -1,8 +1,6 @@
 <template>
   <div>
-    <Navbar />
     <Cart />
-    <Footer />
   </div>
 </template>
 

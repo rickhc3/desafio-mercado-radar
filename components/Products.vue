@@ -4,7 +4,7 @@
       size="sm"
       class="mr-sm-2"
       placeholder="Pesquisar produtos"
-      @keydown="filterProducts($event.target.value)"
+      v-model="search"
     ></b-form-input>
     <div class="row" v-for="i in Math.ceil($allProducts.length / 4)" :key="i">
       <b-card-group deck class="my-2">
@@ -12,7 +12,9 @@
           v-for="(product, i) in $allProducts.slice((i - 1) * 4, i * 4)"
           :key="i"
           :title="product.title"
-        >          
+        >
+          <div class="d-flex justify-content-end"></div>
+          
           <div
             class="my-auto"
           >
@@ -48,25 +50,24 @@
 </template>
 
 <script lang="ts">
-import { mapGetters, mapMutations  } from 'vuex'  
 import { Product } from "@/models/Product";
 
 export default {
+  data() {
+    return {
+      allProducts: this.$store.getters.$allProducts,
+      search: "",
+    };
+  },
   computed: {
-   /*  $allProducts: {
-       get: function() {
-         return this.$store.getters.$allProducts;
-       },
-        set: function(value) {
-          this.$store.commit("SET_PRODUCTS", value);
-        },
+    /* $allProducts(): Product[] {
+      return this.$store.getters.$allProducts;
     }, */
-
-    ...mapGetters({
-      $allProducts: "$allProducts",
-    }),
-
-
+    $allProducts() {
+      return this.allProducts.filter((product) => {
+        return product.title.toLowerCase().includes(this.search.toLowerCase());
+      });
+    }
 
   },
   created() {
@@ -128,9 +129,12 @@ export default {
       return this.$store.getters.$wishlist.includes(product);
     },
 
-    ...mapMutations ({
-      filterProducts: "SET_PRODUCTS_SEARCH",
-    }),
+    filterProducts(value: string) {
+      this.$allProducts = this.$allProducts.filter((product) => {
+        return product.title.toLowerCase().includes(value.toLowerCase());
+      });
+      
+    },
   },
 };
 </script>

@@ -69,13 +69,14 @@
 </template>
 
 <script lang="ts">
+import Vue from "vue";
 import { Product } from "@/models/Product";
-export default {
+export default Vue.extend({
   mounted() {
     if (localStorage.getItem("cart")) {
       this.$store.commit(
         "SET_PRODUCTS_CART",
-        JSON.parse(localStorage.getItem("cart"))
+        JSON.parse(localStorage.getItem("cart") as string)
       );
     }
   },
@@ -171,7 +172,7 @@ export default {
       return this.$store.getters.$cart;
     },
   },
-};
+});
 </script>
 
 <style>

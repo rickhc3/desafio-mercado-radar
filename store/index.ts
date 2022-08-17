@@ -1,16 +1,25 @@
-export const state = () => ({
-  products: [],
-  product: {},
-  productRating: {},
-  cart: [],
-  cartTotal: 0,
-  wishlist: [],
-  alsoLike: [],
-  search: ''
-})
+import { GetterTree, ActionTree, MutationTree } from 'vuex'
+import { Product } from "~/models/Product"
 
-export const mutations = {
-  SET_PRODUCTS(state, products) {
+interface Rating {
+  rate: number
+  count: number
+}
+
+export const state = () => ({
+  products: [] as Product[],
+  product: {} as Product,
+  productRating: {} as Rating,
+  cart: [] as Product[],
+  cartTotal: 0,
+  wishlist: [] as Product[],
+  alsoLike: [] as Product[],
+  search: '' as string,
+})
+export type RootState = ReturnType<typeof state>
+
+export const mutations: MutationTree<RootState> = {
+  SET_PRODUCTS(state, products: Product[]) {
     state.products = products
   },
   SET_PRODUCT(state, product) {
@@ -39,25 +48,18 @@ export const mutations = {
   },
   SET_PRODUCTS_ALSO_LIKE(state, alsoLike) {
     state.alsoLike = alsoLike
-  },
-  SET_PRODUCTS_SEARCH(state, search) {
-    state.products = state.products.map(product => {
-      if (product.title.toLowerCase().includes(search.toLowerCase())) {
-        return product
-      }
-    })
   }
 }
 
-export const actions = {
-  fetchProducts(context) {
+export const actions: ActionTree<RootState, RootState> = {
+ async fetchProducts(context) {
     return this.$axios.$get('https://fakestoreapi.com/products')
       .then(response => {
         context.commit('SET_PRODUCTS', response)
       })
   },
 
-  fetchProduct(context, id) {
+ async fetchProduct(context, id) {
     return this.$axios.$get(`https://fakestoreapi.com/products/${id}`)
       .then(response => {
         context.commit('SET_PRODUCT', response)
@@ -97,7 +99,7 @@ export const actions = {
   },
 }
 
-export const getters = {
+export const getters:GetterTree<RootState, RootState> = {
   $allProducts(state) {
     return state.products
   },
@@ -120,10 +122,6 @@ export const getters = {
   },
   $alsoLike(state) {
     return state.alsoLike
-  },
-
-  $valueSearch(state) {
-    return state.search
   },
 
 

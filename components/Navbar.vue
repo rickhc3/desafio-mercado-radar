@@ -14,7 +14,7 @@
 
           <b-button variant="dark" v-b-toggle.sidebar-cart>
             Carrinho
-            <b-icon icon="cart-check-fill" aria-hidden="true"></b-icon>
+            <b-icon icon="cart-fill" aria-hidden="true"></b-icon>
             <span rounded dark>{{ $store.getters.$cart.length }}</span>
           </b-button>
         </b-navbar-nav>

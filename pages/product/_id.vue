@@ -1,6 +1,5 @@
 <template>
   <div>
-    <Navbar />
     <main class="mt-5">
       <div class="container mt-3">
         <!-- Gallery + details-->
@@ -87,9 +86,6 @@ export default Vue.extend({
   },
   created() {
     this.$store.dispatch("fetchProduct", this.$route.params.id);
-  },
-  mounted() {
-    console.log('dsadasdsasda', this.$store.getters.$alsoLike);
   },
   methods: {
     generateRandomMinutes() {

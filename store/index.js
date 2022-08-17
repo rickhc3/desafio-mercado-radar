@@ -95,9 +95,6 @@ export const actions = {
   setAlsoLike(context, alsoLike) {
     context.commit('SET_PRODUCTS_ALSO_LIKE', alsoLike)
   },
-  filterProducts(context, search) {
-    context.commit('SET_PRODUCTS_SEARCH', search)
-  }
 }
 
 export const getters = {
@@ -129,11 +126,6 @@ export const getters = {
     return state.search
   },
 
-  $search(state) {
-    return state.products.filter(product => {
-      return product.title.toLowerCase().includes(state.search.toLowerCase())
-    })
-  }
 
 
 }

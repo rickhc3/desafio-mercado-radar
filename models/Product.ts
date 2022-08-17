@@ -8,6 +8,7 @@ interface Product {
     rate: number;
     count: number;
   }
+  show: boolean;
 }
 
 export { Product };

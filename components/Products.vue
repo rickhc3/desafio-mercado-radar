@@ -4,7 +4,7 @@
       size="sm"
       class="mr-sm-2"
       placeholder="Pesquisar produtos"
-      @keydown="searchProducts($event.target.value)"
+      @keydown="filterProducts($event.target.value)"
     ></b-form-input>
     <div class="row" v-for="i in Math.ceil($allProducts.length / 4)" :key="i">
       <b-card-group deck class="my-2">
@@ -12,9 +12,7 @@
           v-for="(product, i) in $allProducts.slice((i - 1) * 4, i * 4)"
           :key="i"
           :title="product.title"
-        >
-          <div class="d-flex justify-content-end"></div>
-          
+        >          
           <div
             class="my-auto"
           >
@@ -50,13 +48,26 @@
 </template>
 
 <script lang="ts">
+import { mapGetters, mapMutations  } from 'vuex'  
 import { Product } from "@/models/Product";
 
 export default {
   computed: {
-    $allProducts(): Product[] {
-      return this.$store.getters.$allProducts;
-    },
+   /*  $allProducts: {
+       get: function() {
+         return this.$store.getters.$allProducts;
+       },
+        set: function(value) {
+          this.$store.commit("SET_PRODUCTS", value);
+        },
+    }, */
+
+    ...mapGetters({
+      $allProducts: "$allProducts",
+    }),
+
+
+
   },
   created() {
     this.$store.dispatch("fetchProducts");
@@ -86,14 +97,27 @@ export default {
     },
 
     addFavorite(product: Product) {
-      this.$store.dispatch("addToWishlist", product);
-      this.$bvToast.toast(`${product.title} adicionado aos favoritos`, {
+       if (this.checkFavorite(product)) {
+        this.$store.dispatch("removeFromWishlist", product);
+        this.$bvToast.toast(`${product.title} removido dos favoritos`, {
+        title: "Produto removido dos Favoritos",
+        autoHideDelay: 2000,
+        appendToast: true,
+        variant: "danger",
+        toaster: "b-toaster-top-center",
+      });
+        
+      } else {
+        this.$store.dispatch("addToWishlist", product);
+        this.$bvToast.toast(`${product.title} adicionado aos favoritos`, {
         title: "Produto Adicionado aos Favoritos",
         autoHideDelay: 2000,
         appendToast: true,
         variant: "success",
         toaster: "b-toaster-top-center",
       });
+      }
+
       localStorage.setItem(
         "wishlist",
         JSON.stringify(this.$store.getters.$wishlist)
@@ -104,11 +128,9 @@ export default {
       return this.$store.getters.$wishlist.includes(product);
     },
 
-    searchProducts(search: string) {
-      this.$allProducts
-        .filter((el) => el.title === search)
-        .map((el) => el.title);
-    },
+    ...mapMutations ({
+      filterProducts: "SET_PRODUCTS_SEARCH",
+    }),
   },
 };
 </script>

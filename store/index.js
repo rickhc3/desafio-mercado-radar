@@ -6,6 +6,7 @@ export const state = () => ({
   cartTotal: 0,
   wishlist: [],
   alsoLike: [],
+  search: ''
 })
 
 export const mutations = {
@@ -38,6 +39,13 @@ export const mutations = {
   },
   SET_PRODUCTS_ALSO_LIKE(state, alsoLike) {
     state.alsoLike = alsoLike
+  },
+  SET_PRODUCTS_SEARCH(state, search) {
+    state.products = state.products.map(product => {
+      if (product.title.toLowerCase().includes(search.toLowerCase())) {
+        return product
+      }
+    })
   }
 }
 
@@ -74,11 +82,7 @@ export const actions = {
   },
 
   addToWishlist(context, product) {
-    if (!context.state.wishlist.includes(product)) {
-      context.commit('ADD_PRODUCT_WISHLIST', product)
-    } else {
-      context.commit('REMOVE_PRODUCT_WISHLIST', product)
-    }
+    context.commit('ADD_PRODUCT_WISHLIST', product)
   },
 
   removeFromWishlist(context, product) {
@@ -91,6 +95,9 @@ export const actions = {
   setAlsoLike(context, alsoLike) {
     context.commit('SET_PRODUCTS_ALSO_LIKE', alsoLike)
   },
+  filterProducts(context, search) {
+    context.commit('SET_PRODUCTS_SEARCH', search)
+  }
 }
 
 export const getters = {
@@ -117,6 +124,16 @@ export const getters = {
   $alsoLike(state) {
     return state.alsoLike
   },
-  
+
+  $valueSearch(state) {
+    return state.search
+  },
+
+  $search(state) {
+    return state.products.filter(product => {
+      return product.title.toLowerCase().includes(state.search.toLowerCase())
+    })
+  }
+
 
 }

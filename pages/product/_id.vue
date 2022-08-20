@@ -79,13 +79,15 @@ import Vue from "vue";
 import { Product } from "@/models/Product";
 
 export default Vue.extend({
+  head() {
+    return {
+      title: this.$store.getters.$product.title,
+    };
+  },
   computed: {
     $products() {
       return this.$store.getters.$product;
     },
-  },
-  created() {
-    this.$store.dispatch("fetchProduct", this.$route.params.id);
   },
   mounted() {
     this.$store.dispatch("fetchProduct", this.$route.params.id);
@@ -110,7 +112,7 @@ export default Vue.extend({
         autoHideDelay: 2000,
         appendToast: true,
         variant: "success",
-        toaster: "b-toaster-top-center",
+        toaster: "b-toaster-top-right",
       });
       localStorage.setItem("cart", JSON.stringify(this.$store.getters.$cart));
     },

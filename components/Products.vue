@@ -17,8 +17,6 @@
           :key="i"
           :title="product.title"
         >
-          <div class="d-flex justify-content-end"></div>
-
           <div class="my-auto">
             <a :href="`/product/${product.id}`">
               <b-card-img :src="product.image"></b-card-img>
@@ -99,7 +97,7 @@ export default Vue.extend({
         autoHideDelay: 2000,
         appendToast: true,
         variant: "success",
-        toaster: "b-toaster-top-center",
+        toaster: "b-toaster-top-right",
       });
       localStorage.setItem("cart", JSON.stringify(this.$store.getters.$cart));
     },
@@ -112,7 +110,7 @@ export default Vue.extend({
           autoHideDelay: 2000,
           appendToast: true,
           variant: "danger",
-          toaster: "b-toaster-top-center",
+          toaster: "b-toaster-top-right",
         });
       } else {
         this.$store.dispatch("addToWishlist", product);
@@ -121,7 +119,7 @@ export default Vue.extend({
           autoHideDelay: 2000,
           appendToast: true,
           variant: "success",
-          toaster: "b-toaster-top-center",
+          toaster: "b-toaster-top-right",
         });
       }
 

@@ -5,7 +5,14 @@
 </template>
 
 <script>
-export default {};
+export default {
+  head() {
+    return {
+      title: 'Carrinho - Desafio Mercado Radar',
+    };
+  },
+
+};
 </script>
 
 <style>

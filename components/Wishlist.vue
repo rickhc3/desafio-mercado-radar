@@ -1,14 +1,16 @@
 <template>
   <div>
-    <h3>Favoritos</h3>
+    <div class="container mt-5">
     <div class="row">
       <div class="col-md-12">
-        <div class="card">
+
+        <b-card title="Favoritos">
           <div class="card-body">
             <div class="table-responsive">
               <table class="table table-hover table-striped">
                 <thead>
                   <tr>
+                    <th></th>
                     <th>Produto</th>
                     <th>Preço</th>
                     <th>Ações</th>
@@ -16,25 +18,45 @@
                 </thead>
                 <tbody>
                   <tr v-for="(product, i) in products" :key="i">
+                    <td>
+                      <a :href="`/product/${product.id}`">
+                      <img
+                        :src="product.image"
+                        class="img-fluid"
+                        width="50"
+                        height="50"
+                      /></a>
+                    </td>
                     <td>{{ product.title }}</td>
                     <td>{{ formatMoney(product.price) }}</td>
                     <td>
-                      <button
-                        class="btn btn-danger"
+                      <b-button
+                        variant="success"
+                        @click="addToCart(product)"
+                        v-b-tooltip.hover
+                        title="Adicionar ao Carrinho"
+                        size="sm"
+                      >
+                        <b-icon icon="cart-plus" aria-hidden="true"></b-icon>
+                      </b-button>
+                      <b-button
+                        variant="danger"
                         @click="removeProduct(i)"
                         v-b-tooltip.hover
                         title="Remover do Favoritos"
+                        size="sm"
                       >
                         <b-icon icon="trash"></b-icon>
-                      </button>
+                      </b-button>
                     </td>
                   </tr>
                 </tbody>
               </table>
             </div>
           </div>
-        </div>
+        </b-card>
       </div>
+    </div>
     </div>
   </div>
 </template>
@@ -61,6 +83,17 @@ export default Vue.extend({
     }
   },
   methods: {
+    addToCart(product: Product) {
+      this.$store.dispatch("addToCart", product);
+      this.$bvToast.toast(`${product.title} adicionado ao carrinho`, {
+        title: "Produto Adicionado",
+        autoHideDelay: 2000,
+        appendToast: true,
+        variant: "success",
+        toaster: "b-toaster-top-right",
+      });
+      localStorage.setItem("cart", JSON.stringify(this.$store.getters.$cart));
+    },
     removeProduct(product: Product) {
       this.ModalConfirm(
         "Tem certeza?",
@@ -72,8 +105,7 @@ export default Vue.extend({
             "wishlist",
             JSON.stringify(this.$store.getters.$wishlist)
           );
-          await this.ModalInfo("Info!", "response.message");
-          this.$bvModal.show("modal-1");
+          await this.ModalInfo("Info", `Produto removido dos favoritos`);
         }
       });
     },

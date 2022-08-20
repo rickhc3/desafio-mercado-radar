@@ -1,76 +1,82 @@
 <template>
   <div>
-    <div class="container mt-3">
-      <h4>Carrinho</h4>
+    <div class="container mt-5">
       <div class="row">
         <div class="col-12">
-          <div class="table-responsive">
-            <table class="table table-striped">
-              <thead>
-                <tr>
-                  <th></th>
-                  <th>Produto</th>
-                  <th>Preço</th>
-                  <th>Ações</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="(product, i) in $cart" :key="i">
-                  <td>
-                    <img
-                      :src="product.image"
-                      class="img-fluid"
-                      width="50"
-                      height="50"
-                    />
-                  </td>
-                  <td>
-                    <span>
-                      {{ product.title }}
-                    </span>
-                  </td>
-                  <td>
-                    <span>
-                      {{ formatMoney(product.price) }}
-                    </span>
-                  </td>
-                  <td>
-                    <b-button
-                      variant="danger"
-                      @click="removeFromCart(i)"
-                      v-b-tooltip.hover
-                      title="Remover do Carrinho"
-                      size="sm"
-                    >
-                      <b-icon icon="trash-fill" aria-hidden="true"></b-icon>
-                    </b-button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+          <b-card title="Carrinho">
+            <div class="table-responsive">
+              <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th></th>
+                    <th>Produto</th>
+                    <th>Preço</th>
+                    <th>Ações</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="(product, i) in $cart" :key="i">
+                    <td class="text-center">
+                      <a :href="`/product/${product.id}`">
+                        <img
+                          :src="product.image"
+                          class="img-fluid"
+                          width="50"
+                          height="50"
+                      /></a>
+                    </td>
+                    <td>
+                      <span>
+                        {{ product.title }}
+                      </span>
+                    </td>
+                    <td>
+                      <span>
+                        {{ formatMoney(product.price) }}
+                      </span>
+                    </td>
+                    <td>
+                      <b-button
+                        variant="danger"
+                        @click="removeFromCart(product, i)"
+                        v-b-tooltip.hover
+                        title="Remover do Carrinho"
+                        size="sm"
+                      >
+                        <b-icon icon="trash-fill" aria-hidden="true"></b-icon>
+                      </b-button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </b-card>
+          <div class="row my-4">
+            <div class="col-8"></div>
+            <div class="col-4">
+              <div class="text-left p-1">
+                <span>
+                  <b>Total do Carrinho</b>:
+                  {{ formatMoney($store.getters.$cartTotal) }}
+                </span>
+                <br />
+                <span>
+                  <b>Imposto</b>:
+                  {{ formatMoney(tax5Percent($store.getters.$cartTotal)) }}
+                </span>
+                <span
+                  ><br />
+                  <b>Total com Imposto</b>:
+                  {{ formatMoney(totalWithTax($store.getters.$cartTotal)) }}
+                </span>
+              </div>
+              <div class="text-center">
+                <b-button variant="success" @click="finishPurchase">
+                  Finalizar Compra
+                </b-button>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
-      <hr />
-      <div class="d-flex justify-content-end flex-wrap">
-        <span>
-          <b>Total do Carrinho</b>:
-          {{ formatMoney($store.getters.$cartTotal) }}
-        </span>
-        <span>
-          <b>Imposto</b>:
-          {{ formatMoney(tax5Percent($store.getters.$cartTotal)) }}
-        </span>
-        <span>
-          <b>Total com Imposto</b>:
-          {{ formatMoney(totalWithTax($store.getters.$cartTotal)) }}
-        </span>
-      </div>
-      <div class="row">
-        <div class="text-center">
-          <b-button variant="success" @click="finishPurchase">
-            Finalizar Compra
-          </b-button>
         </div>
       </div>
     </div>
@@ -97,14 +103,14 @@ export default Vue.extend({
         currency: "BRL",
       }).format(value);
     },
-    removeFromCart(product: Product) {
-      this.$store.dispatch("removeFromCart", product);
+    removeFromCart(product: Product, i: number) {
+      this.$store.dispatch("removeFromCart", i);
       this.$bvToast.toast(`${product.title} removido do carrinho`, {
         title: "Produto Removido",
         autoHideDelay: 2000,
         appendToast: true,
         variant: "success",
-        toaster: "b-toaster-top-center",
+        toaster: "b-toaster-top-right",
       });
       localStorage.setItem("cart", JSON.stringify(this.$store.getters.$cart));
     },
@@ -117,17 +123,27 @@ export default Vue.extend({
       return price + this.tax5Percent(price);
     },
 
-    finishPurchase() {
-      this.$store.dispatch("emptyCart");
-      this.$bvToast.toast(`Compra finalizada`, {
-        title: "Compra Finalizada",
-        autoHideDelay: 2000,
-        appendToast: true,
-        variant: "success",
-        toaster: "b-toaster-top-center",
+    finishPurchase(product: Product) {
+      this.ModalConfirm(
+        "Deseja finalizar a compra?",
+        " "
+      ).then(async (r) => {
+        this.$store.dispatch("emptyCart");
+        if (r) {
+          this.$store.dispatch("removeFromWishlist", product);
+          localStorage.setItem(
+            "wishlist",
+            JSON.stringify(this.$store.getters.$wishlist)
+          );
+          await this.ModalInfo("Info", `Compra finalizada`);
+          
+          this.$router.push("/");
+          localStorage.setItem(
+            "cart",
+            JSON.stringify(this.$store.getters.$cart)
+          );
+        }
       });
-      localStorage.setItem("cart", JSON.stringify(this.$store.getters.$cart));
-      this.$router.push("/");
     },
 
     ModalConfirm(title: string, text: string = "") {

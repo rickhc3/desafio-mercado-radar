@@ -1,13 +1,16 @@
 <template>
   <div>
-    <Navbar />
     <Wishlist />
-    <Footer />
   </div>
 </template>
 
 <script>
 export default {
+  head() {
+    return {
+      title: 'Favoritos - Desafio Mercado Radar',
+    };
+  },
 
 }
 </script>

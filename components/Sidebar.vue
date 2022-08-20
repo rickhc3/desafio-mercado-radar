@@ -2,8 +2,7 @@
   <div>
     <b-sidebar id="sidebar-cart" title="Carrinho" right shadow backdrop>
       <div class="p-2 my-2">
-        <div class="list-group" v-if="$store.getters.$cart.length > 0"
->
+        <div class="list-group" v-if="$store.getters.$cart.length > 0">
           <div
             class="
               list-group-item
@@ -28,8 +27,13 @@
                 <span>{{ formatMoney(product.price) }}</span>
               </div>
               <div class="d-flex justify-content-end">
-                <b-button variant="danger" @click="removeFromCart(product, i)" size="sm" v-b-tooltip.hover
-                        title="Remover do Carrinho">
+                <b-button
+                  variant="danger"
+                  @click="removeFromCart(product, i)"
+                  size="sm"
+                  v-b-tooltip.hover
+                  title="Remover do Carrinho"
+                >
                   <b-icon icon="trash-fill" aria-hidden="true"></b-icon>
                 </b-button>
               </div>
@@ -40,30 +44,39 @@
           <h5>Nenhum produto no carrinho</h5>
         </div>
         <div v-if="$store.getters.$cart.length > 0">
-          <hr>
-        <div class="text-left p-1">
-          <span>
-            <b>Total do Carrinho</b>:
-            {{ formatMoney($store.getters.$cartTotal) }}
-          </span> <br>
-          <span>
-            <b>Imposto</b>: {{ formatMoney(tax5Percent($store.getters.$cartTotal)) }}
-          </span>
-          <span><br>
-            <b>Total com Imposto</b>:
-            {{ formatMoney(totalWithTax($store.getters.$cartTotal)) }}
-          </span>
-        </div>
-        <hr>
-        <div class="text-center">
-          <b-button @click="$store.dispatch('emptyCart')" variant="danger">
-            Limpar Carrinho
-          </b-button>
+          <hr />
+          <div class="text-left p-1">
+            <span>
+              <b>Total do Carrinho</b>:
+              {{ formatMoney($store.getters.$cartTotal) }}
+            </span>
+            <br />
+            <span>
+              <b>Imposto</b>:
+              {{ formatMoney(tax5Percent($store.getters.$cartTotal)) }}
+            </span>
+            <span
+              ><br />
+              <b>Total com Imposto</b>:
+              {{ formatMoney(totalWithTax($store.getters.$cartTotal)) }}
+            </span>
+          </div>
+          <hr />
+          <div class="text-center">
+            <b-button-group>
+              <b-button @click="$store.dispatch('emptyCart')" variant="danger">
+                Limpar Carrinho
+              </b-button>
 
-          <b-button :href="`/cart`" variant="primary" class="ml-2">
-            Ver Carrinho
-          </b-button>
-        </div>
+              <b-button :href="`/cart`" variant="primary">
+                Ver Carrinho
+              </b-button>
+
+              <b-button @click="finishPurchase" variant="success">
+                Finalizar Compra
+              </b-button>
+            </b-button-group>
+          </div>
         </div>
       </div>
     </b-sidebar>
@@ -72,8 +85,9 @@
 <script lang="ts">
 import Vue from "vue";
 import { Product } from "@/models/Product";
+import VueTools from "~/helpers/mixins/vue-tools";
 
-export default Vue.extend( {
+export default Vue.extend({
   computed: {
     $cart(): Product[] {
       return this.$store.getters.$cart;
@@ -81,7 +95,7 @@ export default Vue.extend( {
   },
 
   mounted() {
-       this.$store.dispatch("fetchProducts");
+    this.$store.dispatch("fetchProducts");
     if (localStorage.getItem("cart")) {
       this.$store.commit(
         "SET_PRODUCTS_CART",
@@ -125,9 +139,74 @@ export default Vue.extend( {
         autoHideDelay: 2000,
         appendToast: true,
         variant: "success",
-        toaster: "b-toaster-top-center",
+        toaster: "b-toaster-top-right",
       });
       localStorage.setItem("cart", JSON.stringify(this.$store.getters.$cart));
+    },
+
+    finishPurchase(product: Product) {
+      this.ModalConfirm("Deseja finalizar a compra?", " ").then(async (r) => {
+        this.$store.dispatch("emptyCart");
+        if (r) {
+          this.$store.dispatch("removeFromWishlist", product);
+          localStorage.setItem(
+            "wishlist",
+            JSON.stringify(this.$store.getters.$wishlist)
+          );
+          await this.ModalInfo("Info", `Compra finalizada`);
+          
+           window.location.reload();
+           localStorage.setItem(
+            "cart",
+            JSON.stringify(this.$store.getters.$cart)
+          );
+        }
+      });
+    },
+
+    ModalConfirm(title: string, text: string = "") {
+      return new Promise((resolve, reject) => {
+        this.$bvModal
+          .msgBoxConfirm(text, {
+            title: title,
+            size: "sm",
+            buttonSize: "sm",
+            okVariant: "success",
+            okTitle: "Sim",
+            cancelTitle: "Não",
+            footerClass: "p-2",
+            hideHeaderClose: false,
+            centered: true,
+          })
+          .then((value: any) => {
+            resolve(value);
+          })
+          .catch((err: any) => {
+            reject(err);
+          });
+      });
+    },
+
+    ModalInfo(title: string, text: string = "") {
+      return new Promise((resolve, reject) => {
+        this.$bvModal
+          .msgBoxOk(text, {
+            title: title,
+            size: "sm",
+            buttonSize: "sm",
+            okVariant: "success",
+            okTitle: "Ok",
+            footerClass: "p-2",
+            hideHeaderClose: false,
+            centered: true,
+          })
+          .then((value: any) => {
+            resolve(value);
+          })
+          .catch((err: any) => {
+            reject(err);
+          });
+      });
     },
   },
 });

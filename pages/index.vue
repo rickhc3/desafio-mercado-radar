@@ -14,5 +14,10 @@ export default Vue.extend({
       this.$store.commit("SET_PRODUCTS_CART", JSON.parse(localStorage.getItem("cart") as string));
     }
   },
+  head() {
+    return {
+      title: 'Home - Desafio Mercado Radar',
+    };
+  },
 });
 </script>

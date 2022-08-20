@@ -1,7 +1,5 @@
-# desafio-mercado-radar
-
-## Build Setup
-
+# Desafio Mercado Radar
+###Instalação
 ```bash
 # install dependencies
 $ yarn install
@@ -16,54 +14,35 @@ $ yarn start
 # generate static project
 $ yarn generate
 ```
-
-For detailed explanation on how things work, check out the [documentation](https://nuxtjs.org).
-
-## Special Directories
-
-You can create the following extra directories, some of which have special behaviors. Only `pages` is required; you can delete them if you don't want to use their functionality.
-
-### `assets`
-
-The assets directory contains your uncompiled assets such as Stylus or Sass files, images, or fonts.
-
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/assets).
-
-### `components`
-
-The components directory contains your Vue.js components. Components make up the different parts of your page and can be reused and imported into your pages, layouts and even other components.
-
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/components).
-
-### `layouts`
-
-Layouts are a great help when you want to change the look and feel of your Nuxt app, whether you want to include a sidebar or have distinct layouts for mobile and desktop.
-
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/layouts).
+###Desafio
+O seu projeto deverá:
+- Ser responsivo. [✅]
+- Listar todos os produtos. [✅]
+- Favoritar e desfavoritar os produtos.  [✅]
+- Incluir e remover os produtos do carrinho.  [✅]
+- Apresentar a soma dos preços dos produtos no carrinho.  [✅]
+- Visualizar os produtos do carrinho.  [✅]
+- Mostrar no carrinho o valor total da soma dos preços dos produtos e o valor referente a 5% de imposto do valor total.  [✅]
+- Filtrar os produtos pelo nome.  [✅]
+- Finalizar uma compra (após finalizar a compra remover todos os produtos do carrinho).  [✅]
+- Apresentar loading no carregamento dos produtos.  [✅]
+- Guardar os estados da aplicação (carrinho e favorito) no local storage.  [✅]
 
 
-### `pages`
+###Requisitos Técnicos
 
-This directory contains your application views and routes. Nuxt will read all the `*.vue` files inside this directory and setup Vue Router automatically.
+- O projeto deve utilizar Vue.js. [✅] Comentário: Utilizei Vue.js + NuxtJs
+- Utilizar BootstrapVue. [✅]
+- Utilizar Vuex. [✅]
+- Fazer os commits conforme o desenvolvimento do projeto (não enviar tudo em apenas um commit!). [✅]
+- Os produtos devem ser acessados nesse endpoint https://fakestoreapi.com/products. [✅]
+- Opcional: Utilizar TypeScript. [✅]
+- Opcional: Carrinho do tipo navigation drawers (exemplo aqui). [✅]
 
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/get-started/routing).
 
-### `plugins`
-
-The plugins directory contains JavaScript plugins that you want to run before instantiating the root Vue.js Application. This is the place to add Vue plugins and to inject functions or constants. Every time you need to use `Vue.use()`, you should create a file in `plugins/` and add its path to plugins in `nuxt.config.js`.
-
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/plugins).
-
-### `static`
-
-This directory contains your static files. Each file inside this directory is mapped to `/`.
-
-Example: `/static/robots.txt` is mapped as `/robots.txt`.
-
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/static).
-
-### `store`
-
-This directory contains your Vuex store files. Creating a file in this directory automatically activates Vuex.
-
-More information about the usage of this directory in [the documentation](https://nuxtjs.org/docs/2.x/directory-structure/store).
+###Entrega
+- O repositório do projeto deverá ser privado. [✅]
+- Obrigatório compartilhar seu código no GitHub com CesarCarriel, beniciodaniel e sandrovw64. [✅]
+- README.md do repositório deve conter o manual de setup da aplicação. [✅]
+- Opcional: Fazer o deploy de sua aplicação e acrescentar o link no README.md.
+Link: https://desafio-mercado-radar.vercel.app/

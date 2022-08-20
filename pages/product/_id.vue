@@ -10,7 +10,21 @@
             <div class="row">
               <!-- Product gallery-->
               <div class="col-lg-7 pe-lg-0 pt-lg-4">
-                <b-img :src="$store.getters.$product.image" fluid></b-img>
+                <!-- <b-img :src="$store.getters.$product.image" fluid></b-img> -->
+                <b-card-img
+                  :src="$store.getters.$product.image"
+                  :alt="alt"
+                  @load="loaded = true"
+                  v-show="loaded"
+                  fluid
+                />
+                <div class="d-flex justify-content-center mb-3">
+                  <b-spinner
+                    label="Loading..."
+                    style="width: 5rem; height: 5rem"
+                    v-show="loaded == false || error"
+                  ></b-spinner>
+                </div>
               </div>
               <!-- Product details-->
               <div class="col-lg-5 pt-4 pt-lg-0">
@@ -28,7 +42,8 @@
                         ms-1
                       "
                     >
-                      {{ $store.getters.$rating.count }} Reviews <br />Avaliação média dos clientes:
+                      {{ $store.getters.$rating.count }} Reviews <br />Avaliação
+                      média dos clientes:
                       <b-form-rating
                         v-model="$store.getters.$rating.rate"
                         readonly
@@ -38,12 +53,16 @@
                       ></b-form-rating>
                     </span>
                   </div>
-                  <b-button class="btn-wishlist me-0 me-lg-n3" type="button" @click="addFavorite($store.getters.$product)">
+                  <b-button
+                    class="btn-wishlist me-0 me-lg-n3"
+                    type="button"
+                    @click="addFavorite($store.getters.$product)"
+                  >
                     <b-icon
-                    icon="heart-fill"
-                    v-if="checkFavorite($store.getters.$product)"
-                  ></b-icon>
-                  <b-icon icon="heart" v-else></b-icon>
+                      icon="heart-fill"
+                      v-if="checkFavorite($store.getters.$product)"
+                    ></b-icon>
+                    <b-icon icon="heart" v-else></b-icon>
                   </b-button>
                 </div>
                 <div class="mb-3">
@@ -73,48 +92,48 @@
       <div class="container py-5 my-md-3">
         <h2 class="h3 text-center pb-4">Você também pode gostar de...</h2>
         <b-card-group deck class="my-2">
-        <b-card
-          v-for="(product, i) in $alsoLike"
-          :key="i"
-          :title="product.title"
-        >
-          <div class="my-auto">
-            <a :href="`/product/${product.id}`">
-              <b-card-img :src="product.image"></b-card-img>
-            </a>
-          </div>
-          <b-icon
-            icon="circle-fill"
-            animation="throb"
-            font-scale="4"
-            v-if="!product.image"
-          ></b-icon>
-
-          <template #footer>
-            <p class="h3 text-center">{{ formatMoney(product.price) }}</p>
-            <div class="text-center">
-              <b-button-group size="sm">
-                <b-button @click="addToCart(product)" block variant="success "
-                  >Adicionar ao Carrinho</b-button
-                >
-                <b-button
-                  @click="addFavorite(product)"
-                  size="sm"
-                  variant="danger"
-                  v-b-tooltip.hover
-                  title="Marcar como favorito"
-                >
-                  <b-icon
-                    icon="heart-fill"
-                    v-if="checkFavorite(product)"
-                  ></b-icon>
-                  <b-icon icon="heart" v-else></b-icon>
-                </b-button>
-              </b-button-group>
+          <b-card
+            v-for="(product, i) in $alsoLike"
+            :key="i"
+            :title="product.title"
+          >
+            <div class="my-auto">
+              <a :href="`/product/${product.id}`">
+                <b-card-img :src="product.image"></b-card-img>
+              </a>
             </div>
-          </template>
-        </b-card>
-      </b-card-group>
+            <b-icon
+              icon="circle-fill"
+              animation="throb"
+              font-scale="4"
+              v-if="!product.image"
+            ></b-icon>
+
+            <template #footer>
+              <p class="h3 text-center">{{ formatMoney(product.price) }}</p>
+              <div class="text-center">
+                <b-button-group size="sm">
+                  <b-button @click="addToCart(product)" block variant="success "
+                    >Adicionar ao Carrinho</b-button
+                  >
+                  <b-button
+                    @click="addFavorite(product)"
+                    size="sm"
+                    variant="danger"
+                    v-b-tooltip.hover
+                    title="Marcar como favorito"
+                  >
+                    <b-icon
+                      icon="heart-fill"
+                      v-if="checkFavorite(product)"
+                    ></b-icon>
+                    <b-icon icon="heart" v-else></b-icon>
+                  </b-button>
+                </b-button-group>
+              </div>
+            </template>
+          </b-card>
+        </b-card-group>
       </div>
     </main>
   </div>
@@ -128,6 +147,12 @@ export default Vue.extend({
   head() {
     return {
       title: this.$store.getters.$product.title,
+    };
+  },
+  data() {
+    return {
+      loaded: false,
+      error: false,
     };
   },
   computed: {
@@ -189,7 +214,7 @@ export default Vue.extend({
       );
     },
 
-     checkFavorite(product: Product) {
+    checkFavorite(product: Product) {
       return this.$store.getters.$wishlist.includes(product);
     },
   },

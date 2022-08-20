@@ -17,17 +17,20 @@
           :key="i"
           :title="product.title"
         >
-          <div class="my-auto">
-            <a :href="`/product/${product.id}`">
-              <b-card-img :src="product.image"></b-card-img>
-            </a>
-          </div>
-          <b-icon
-            icon="circle-fill"
-            animation="throb"
-            font-scale="4"
-            v-if="!product.image"
-          ></b-icon>
+          <template>
+            <div class="my-auto">
+              <a :href="`/product/${product.id}`">
+                <b-card-img
+                  :src="product.image"
+                  :alt="alt"
+                  @load="loaded = true"
+                  v-show="loaded"
+                  fluid
+                />
+                <b-spinner v-show="loaded == false || error" />
+              </a>
+            </div>
+          </template>
 
           <template #footer>
             <p class="h3 text-center">{{ formatMoney(product.price) }}</p>
@@ -66,6 +69,8 @@ export default Vue.extend({
   data() {
     return {
       search: "",
+      loaded: false,
+      error: false,
     };
   },
   computed: {

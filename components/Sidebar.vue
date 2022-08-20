@@ -154,7 +154,7 @@ export default Vue.extend({
           );
           await this.ModalInfo("Info", `Compra finalizada`);
           
-           window.location.reload();
+           window.location.href = "/";
            localStorage.setItem(
             "cart",
             JSON.stringify(this.$store.getters.$cart)

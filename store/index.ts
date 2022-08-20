@@ -47,7 +47,7 @@ export const mutations: MutationTree<RootState> = {
     state.wishlist = wishlist
   },
   SET_PRODUCTS_ALSO_LIKE(state, alsoLike) {
-    state.alsoLike = alsoLike
+    state.alsoLike.push(alsoLike)
   }
 }
 
@@ -59,12 +59,21 @@ export const actions: ActionTree<RootState, RootState> = {
       })
   },
 
- async fetchProduct(context, id) {
+  async fetchProduct(context, id) {
     return this.$axios.$get(`https://fakestoreapi.com/products/${id}`)
       .then(response => {
         context.commit('SET_PRODUCT', response)
         context.commit('SET_PRODUCT_RATING', response.rating)
       })
+  },
+
+  async alsoLike(context) {
+    for (let i = 0; i < 4; i++) {
+      this.$axios.$get(`https://fakestoreapi.com/products/${Math.floor(Math.random() * 20) + 1}`)
+      .then(response => {
+        context.commit('SET_PRODUCTS_ALSO_LIKE', response)
+      })
+    }
   },
 
   addToCart(context, product) {
@@ -92,10 +101,6 @@ export const actions: ActionTree<RootState, RootState> = {
   },
   setWishlist(context, wishlist) {
     context.commit('SET_PRODUCTS_WISHLIST', wishlist)
-  },
-
-  setAlsoLike(context, alsoLike) {
-    context.commit('SET_PRODUCTS_ALSO_LIKE', alsoLike)
   },
 }
 

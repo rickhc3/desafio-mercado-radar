@@ -72,6 +72,49 @@
       <hr />
       <div class="container py-5 my-md-3">
         <h2 class="h3 text-center pb-4">Você também pode gostar de...</h2>
+        <b-card-group deck class="my-2">
+        <b-card
+          v-for="(product, i) in $alsoLike"
+          :key="i"
+          :title="product.title"
+        >
+          <div class="my-auto">
+            <a :href="`/product/${product.id}`">
+              <b-card-img :src="product.image"></b-card-img>
+            </a>
+          </div>
+          <b-icon
+            icon="circle-fill"
+            animation="throb"
+            font-scale="4"
+            v-if="!product.image"
+          ></b-icon>
+
+          <template #footer>
+            <p class="h3 text-center">{{ formatMoney(product.price) }}</p>
+            <div class="text-center">
+              <b-button-group size="sm">
+                <b-button @click="addToCart(product)" block variant="success "
+                  >Adicionar ao Carrinho</b-button
+                >
+                <b-button
+                  @click="addFavorite(product)"
+                  size="sm"
+                  variant="danger"
+                  v-b-tooltip.hover
+                  title="Marcar como favorito"
+                >
+                  <b-icon
+                    icon="heart-fill"
+                    v-if="checkFavorite(product)"
+                  ></b-icon>
+                  <b-icon icon="heart" v-else></b-icon>
+                </b-button>
+              </b-button-group>
+            </div>
+          </template>
+        </b-card>
+      </b-card-group>
       </div>
     </main>
   </div>
@@ -91,22 +134,21 @@ export default Vue.extend({
     $products() {
       return this.$store.getters.$product;
     },
+    $alsoLike() {
+      return this.$store.getters.$alsoLike;
+    },
   },
   mounted() {
     this.$store.dispatch("fetchProduct", this.$route.params.id);
+    this.$store.dispatch("alsoLike");
+    console.log(this.$alsoLike);
   },
   methods: {
-    generateRandomMinutes() {
-      return Math.floor(Math.random() * 60);
-    },
     formatMoney(value: number) {
       return new Intl.NumberFormat("pt-BR", {
         style: "currency",
         currency: "BRL",
       }).format(value);
-    },
-    fetchRandomProduct() {
-      this.$store.dispatch("fetchProduct", Math.floor(Math.random() * 10));
     },
     addToCart(product: Product) {
       this.$store.dispatch("addToCart", product);

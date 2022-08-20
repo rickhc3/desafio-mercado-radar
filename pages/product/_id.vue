@@ -17,14 +17,7 @@
                 <div
                   class="d-flex justify-content-between align-items-center mb-2"
                 >
-                  <a href="#reviews" data-scroll="">
-                    <div class="star-rating">
-                      <i class="star-rating-icon ci-star-filled active"></i
-                      ><i class="star-rating-icon ci-star-filled active"></i
-                      ><i class="star-rating-icon ci-star-filled active"></i
-                      ><i class="star-rating-icon ci-star-filled active"></i
-                      ><i class="star-rating-icon ci-star"></i>
-                    </div>
+                  <div>
                     <span
                       class="
                         d-inline-block
@@ -35,12 +28,22 @@
                         ms-1
                       "
                     >
-                      {{ $store.getters.$rating.count }} Reviews / Nota Média:
-                      {{ $store.getters.$rating.rate }}
-                    </span></a
-                  >
-                  <b-button class="btn-wishlist me-0 me-lg-n3" type="button">
-                    <b-icon icon="heart"></b-icon>
+                      {{ $store.getters.$rating.count }} Reviews <br />Avaliação média dos clientes:
+                      <b-form-rating
+                        v-model="$store.getters.$rating.rate"
+                        readonly
+                        show-value
+                        show-value-max
+                        no-border
+                      ></b-form-rating>
+                    </span>
+                  </div>
+                  <b-button class="btn-wishlist me-0 me-lg-n3" type="button" @click="addFavorite($store.getters.$product)">
+                    <b-icon
+                    icon="heart-fill"
+                    v-if="checkFavorite($store.getters.$product)"
+                  ></b-icon>
+                  <b-icon icon="heart" v-else></b-icon>
                   </b-button>
                 </div>
                 <div class="mb-3">
@@ -115,6 +118,37 @@ export default Vue.extend({
         toaster: "b-toaster-top-right",
       });
       localStorage.setItem("cart", JSON.stringify(this.$store.getters.$cart));
+    },
+    addFavorite(product: Product) {
+      console.log(product);
+      if (this.checkFavorite(product)) {
+        this.$store.dispatch("removeFromWishlist", product);
+        this.$bvToast.toast(`${product.title} removido dos favoritos`, {
+          title: "Produto removido dos Favoritos",
+          autoHideDelay: 2000,
+          appendToast: true,
+          variant: "danger",
+          toaster: "b-toaster-top-right",
+        });
+      } else {
+        this.$store.dispatch("addToWishlist", product);
+        this.$bvToast.toast(`${product.title} adicionado aos favoritos`, {
+          title: "Produto Adicionado aos Favoritos",
+          autoHideDelay: 2000,
+          appendToast: true,
+          variant: "success",
+          toaster: "b-toaster-top-right",
+        });
+      }
+
+      localStorage.setItem(
+        "wishlist",
+        JSON.stringify(this.$store.getters.$wishlist)
+      );
+    },
+
+     checkFavorite(product: Product) {
+      return this.$store.getters.$wishlist.includes(product);
     },
   },
 });

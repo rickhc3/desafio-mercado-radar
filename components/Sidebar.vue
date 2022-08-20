@@ -85,7 +85,6 @@
 <script lang="ts">
 import Vue from "vue";
 import { Product } from "@/models/Product";
-import VueTools from "~/helpers/mixins/vue-tools";
 
 export default Vue.extend({
   computed: {

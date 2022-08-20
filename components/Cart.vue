@@ -86,6 +86,8 @@
 <script lang="ts">
 import Vue from "vue";
 import { Product } from "@/models/Product";
+import { BToast } from 'bootstrap-vue'
+
 export default Vue.extend({
   mounted() {
     if (localStorage.getItem("cart")) {

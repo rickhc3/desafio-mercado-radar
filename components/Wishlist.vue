@@ -40,10 +40,11 @@
 </template>
 
 <script lang="ts">
+import Vue from "vue";
 import { Product } from "@/models/Product";
-export default {
+export default Vue.extend({
   computed: {
-    products() {
+    products() : Product[] {
       return this.$store.getters.$wishlist;
     },
   },
@@ -128,7 +129,7 @@ export default {
       });
     },
   },
-};
+});
 </script>
 
 <style>

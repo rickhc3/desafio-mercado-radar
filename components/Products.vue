@@ -6,7 +6,11 @@
       placeholder="Pesquisar produtos"
       v-model="search"
     ></b-form-input>
-    <div class="row" v-for="i in Math.ceil($allProducts.length / 4)" :key="i">
+    <div
+      class="row d-flex justify-content-center"
+      v-for="i in Math.ceil($allProducts.length / 4)"
+      :key="i"
+    >
       <b-card-group deck class="my-2">
         <b-card
           v-for="(product, i) in $allProducts.slice((i - 1) * 4, i * 4)"
@@ -14,10 +18,8 @@
           :title="product.title"
         >
           <div class="d-flex justify-content-end"></div>
-          
-          <div
-            class="my-auto"
-          >
+
+          <div class="my-auto">
             <a :href="`/product/${product.id}`">
               <b-card-img :src="product.image"></b-card-img>
             </a>
@@ -36,8 +38,17 @@
                 <b-button @click="addToCart(product)" block variant="success "
                   >Adicionar ao Carrinho</b-button
                 >
-                <b-button @click="addFavorite(product)" size="sm" variant="danger" v-b-tooltip.hover title="Marcar como favorito">
-                  <b-icon icon="heart-fill" v-if="checkFavorite(product)" ></b-icon>
+                <b-button
+                  @click="addFavorite(product)"
+                  size="sm"
+                  variant="danger"
+                  v-b-tooltip.hover
+                  title="Marcar como favorito"
+                >
+                  <b-icon
+                    icon="heart-fill"
+                    v-if="checkFavorite(product)"
+                  ></b-icon>
                   <b-icon icon="heart" v-else></b-icon>
                 </b-button>
               </b-button-group>
@@ -50,27 +61,23 @@
 </template>
 
 <script lang="ts">
+import Vue from "vue";
 import { Product } from "@/models/Product";
 
-export default {
+export default Vue.extend({
   data() {
     return {
-      allProducts: this.$store.getters.$allProducts,
       search: "",
     };
   },
   computed: {
-    /* $allProducts(): Product[] {
-      return this.$store.getters.$allProducts;
-    }, */
     $allProducts() {
-      return this.allProducts.filter((product) => {
+      return this.$store.getters.$allProducts.filter((product: Product) => {
         return product.title.toLowerCase().includes(this.search.toLowerCase());
       });
-    }
-
+    },
   },
-  created() {
+  mounted() {
     this.$store.dispatch("fetchProducts");
   },
   methods: {
@@ -98,25 +105,24 @@ export default {
     },
 
     addFavorite(product: Product) {
-       if (this.checkFavorite(product)) {
+      if (this.checkFavorite(product)) {
         this.$store.dispatch("removeFromWishlist", product);
         this.$bvToast.toast(`${product.title} removido dos favoritos`, {
-        title: "Produto removido dos Favoritos",
-        autoHideDelay: 2000,
-        appendToast: true,
-        variant: "danger",
-        toaster: "b-toaster-top-center",
-      });
-        
+          title: "Produto removido dos Favoritos",
+          autoHideDelay: 2000,
+          appendToast: true,
+          variant: "danger",
+          toaster: "b-toaster-top-center",
+        });
       } else {
         this.$store.dispatch("addToWishlist", product);
         this.$bvToast.toast(`${product.title} adicionado aos favoritos`, {
-        title: "Produto Adicionado aos Favoritos",
-        autoHideDelay: 2000,
-        appendToast: true,
-        variant: "success",
-        toaster: "b-toaster-top-center",
-      });
+          title: "Produto Adicionado aos Favoritos",
+          autoHideDelay: 2000,
+          appendToast: true,
+          variant: "success",
+          toaster: "b-toaster-top-center",
+        });
       }
 
       localStorage.setItem(
@@ -128,15 +134,8 @@ export default {
     checkFavorite(product: Product) {
       return this.$store.getters.$wishlist.includes(product);
     },
-
-    filterProducts(value: string) {
-      this.$allProducts = this.$allProducts.filter((product) => {
-        return product.title.toLowerCase().includes(value.toLowerCase());
-      });
-      
-    },
   },
-};
+});
 </script>
 
 <style scoped>
@@ -148,6 +147,4 @@ export default {
 .card-header {
   background-color: #fff;
 }
-
-
 </style>

@@ -87,6 +87,9 @@ export default Vue.extend({
   created() {
     this.$store.dispatch("fetchProduct", this.$route.params.id);
   },
+  mounted() {
+    this.$store.dispatch("fetchProduct", this.$route.params.id);
+  },
   methods: {
     generateRandomMinutes() {
       return Math.floor(Math.random() * 60);

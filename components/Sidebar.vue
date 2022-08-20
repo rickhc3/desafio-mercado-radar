@@ -28,7 +28,8 @@
                 <span>{{ formatMoney(product.price) }}</span>
               </div>
               <div class="d-flex justify-content-end">
-                <b-button variant="danger" @click="removeFromCart(product, i)" size="sm">
+                <b-button variant="danger" @click="removeFromCart(product, i)" size="sm" v-b-tooltip.hover
+                        title="Remover do Carrinho">
                   <b-icon icon="trash-fill" aria-hidden="true"></b-icon>
                 </b-button>
               </div>
@@ -40,7 +41,7 @@
         </div>
         <div v-if="$store.getters.$cart.length > 0">
           <hr>
-        <div class="text-left">
+        <div class="text-left p-1">
           <span>
             <b>Total do Carrinho</b>:
             {{ formatMoney($store.getters.$cartTotal) }}
@@ -69,9 +70,10 @@
   </div>
 </template>
 <script lang="ts">
+import Vue from "vue";
 import { Product } from "@/models/Product";
 
-export default {
+export default Vue.extend( {
   computed: {
     $cart(): Product[] {
       return this.$store.getters.$cart;
@@ -79,6 +81,7 @@ export default {
   },
 
   mounted() {
+       this.$store.dispatch("fetchProducts");
     if (localStorage.getItem("cart")) {
       this.$store.commit(
         "SET_PRODUCTS_CART",
@@ -127,5 +130,5 @@ export default {
       localStorage.setItem("cart", JSON.stringify(this.$store.getters.$cart));
     },
   },
-};
+});
 </script>

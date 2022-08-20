@@ -1,13 +1,14 @@
 <template>
   <div>
-    <h4>Carrinho</h4>
-    <div class="container">
+    <div class="container mt-3">
+      <h4>Carrinho</h4>
       <div class="row">
         <div class="col-12">
           <div class="table-responsive">
             <table class="table table-striped">
               <thead>
                 <tr>
+                  <th></th>
                   <th>Produto</th>
                   <th>Preço</th>
                   <th>Ações</th>
@@ -15,6 +16,14 @@
               </thead>
               <tbody>
                 <tr v-for="(product, i) in $cart" :key="i">
+                  <td>
+                    <img
+                      :src="product.image"
+                      class="img-fluid"
+                      width="50"
+                      height="50"
+                    />
+                  </td>
                   <td>
                     <span>
                       {{ product.title }}
@@ -26,12 +35,15 @@
                     </span>
                   </td>
                   <td>
-                    <button
-                      class="btn btn-sm btn-danger"
+                    <b-button
+                      variant="danger"
                       @click="removeFromCart(i)"
+                      v-b-tooltip.hover
+                      title="Remover do Carrinho"
+                      size="sm"
                     >
-                      Remover
-                    </button>
+                      <b-icon icon="trash-fill" aria-hidden="true"></b-icon>
+                    </b-button>
                   </td>
                 </tr>
               </tbody>
@@ -39,29 +51,26 @@
           </div>
         </div>
       </div>
-      <div class="row">
-        <div class="text-right">
-          <span>
-            Total do Carrinho:
-            {{ formatMoney($store.getters.$cartTotal) }}
-          </span>
-          <span>
-            Imposto: {{ formatMoney(tax5Percent($store.getters.$cartTotal)) }}
-          </span>
-          <span>
-            Total com Imposto:
-            {{ formatMoney(totalWithTax($store.getters.$cartTotal)) }}
-          </span>
-        </div>
+      <hr />
+      <div class="d-flex justify-content-end flex-wrap">
+        <span>
+          <b>Total do Carrinho</b>:
+          {{ formatMoney($store.getters.$cartTotal) }}
+        </span>
+        <span>
+          <b>Imposto</b>:
+          {{ formatMoney(tax5Percent($store.getters.$cartTotal)) }}
+        </span>
+        <span>
+          <b>Total com Imposto</b>:
+          {{ formatMoney(totalWithTax($store.getters.$cartTotal)) }}
+        </span>
       </div>
       <div class="row">
         <div class="text-center">
-          <button
-            class="btn btn-sm btn-danger"
-            @click="finishPurchase"
-          >
+          <b-button variant="success" @click="finishPurchase">
             Finalizar Compra
-          </button>
+          </b-button>
         </div>
       </div>
     </div>
@@ -109,7 +118,7 @@ export default Vue.extend({
     },
 
     finishPurchase() {
-      this.$store.dispatch('emptyCart')
+      this.$store.dispatch("emptyCart");
       this.$bvToast.toast(`Compra finalizada`, {
         title: "Compra Finalizada",
         autoHideDelay: 2000,
@@ -118,10 +127,10 @@ export default Vue.extend({
         toaster: "b-toaster-top-center",
       });
       localStorage.setItem("cart", JSON.stringify(this.$store.getters.$cart));
-      this.$router.push('/')
+      this.$router.push("/");
     },
 
-     ModalConfirm(title: string, text: string = "") {
+    ModalConfirm(title: string, text: string = "") {
       return new Promise((resolve, reject) => {
         this.$bvModal
           .msgBoxConfirm(text, {

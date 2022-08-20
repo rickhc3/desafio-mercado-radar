@@ -165,7 +165,6 @@ export default Vue.extend({
   mounted() {
     this.$store.dispatch("fetchProduct", this.$route.params.id);
     this.$store.dispatch("alsoLike");
-    console.log(this.$alsoLike);
   },
   methods: {
     formatMoney(value: number) {
@@ -186,7 +185,6 @@ export default Vue.extend({
       localStorage.setItem("cart", JSON.stringify(this.$store.getters.$cart));
     },
     addFavorite(product: Product) {
-      console.log(product);
       if (this.checkFavorite(product)) {
         this.$store.dispatch("removeFromWishlist", product);
         this.$bvToast.toast(`${product.title} removido dos favoritos`, {

@@ -13,7 +13,6 @@
                 <!-- <b-img :src="$store.getters.$product.image" fluid></b-img> -->
                 <b-card-img
                   :src="$store.getters.$product.image"
-                  :alt="alt"
                   @load="loaded = true"
                   v-show="loaded"
                   fluid

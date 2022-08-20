@@ -22,7 +22,6 @@
               <a :href="`/product/${product.id}`">
                 <b-card-img
                   :src="product.image"
-                  :alt="alt"
                   @load="loaded = true"
                   v-show="loaded"
                   fluid
